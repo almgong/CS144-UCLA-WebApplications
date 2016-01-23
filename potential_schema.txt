@@ -1,0 +1,43 @@
+Still need to prove satisfaction of requirements, but I used ER-design to create this
+
+Tables
+
+User (E): 
+id integer primary key			//faster comparison than text
+user text UNIQUE 
+rating integer
+location text
+country text
+
+
+Item (E):
+item_id integer primary key		//use value in attr
+name text
+currently double 
+first_bid double
+number_of_bids integer
+started_time timestamp
+ends_time timestamp
+seller integer foreign key references User(id)
+location text
+latitude double (NULL OK)
+longitude double (NULL OK)
+country text
+description text
+
+
+Bids (R):
+bidder integer foreign key references User(id)
+item integer foreign key references Item(item_id)
+amount double 
+time timestamp
+
+
+ItemCategory (R):
+id integer foreign key references Item(item_id)
+id integer foreign key references Category(id)
+
+
+SELLS (R):
+user integer foreign key references User(id)
+item integer foreign key references Item(item_id)
