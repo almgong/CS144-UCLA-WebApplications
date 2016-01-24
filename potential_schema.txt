@@ -13,6 +13,7 @@ country text
 Item (E):
 item_id integer primary key		//use value in attr
 name text
+buy_price (NULL OK)
 currently double 
 first_bid double
 number_of_bids integer
@@ -38,6 +39,6 @@ id integer foreign key references Item(item_id)
 id integer foreign key references Category(id)
 
 
-SELLS (R):
+Sells (R):
 user integer foreign key references User(id)
 item integer foreign key references Item(item_id)
