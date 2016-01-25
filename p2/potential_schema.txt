@@ -38,7 +38,6 @@ ItemCategory (R):
 id integer foreign key references Item(item_id)
 id integer foreign key references Category(id)
 
-
-Sells (R):
-user integer foreign key references User(id)
-item integer foreign key references Item(item_id)
+Category (E):
+id integer primary key
+name text
