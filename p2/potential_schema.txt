@@ -3,20 +3,20 @@ Still need to prove satisfaction of requirements, but I used ER-design to create
 Tables
 
 User (E): 
-id integer primary key			//faster comparison than text
-user text UNIQUE 
-rating integer
-location text
-country text
+user text UNIQUE primary key*
+bidder_rating integer  (NULL OK)
+seller_rating integer (NULL OK)
+location text (NUll OK)
+country text (NULL OK)
 
 
 Item (E):
-item_id integer primary key		//use value in attr
+item_id integer primary key*		//use value in attr
 name text
 buy_price (NULL OK)
 currently double 
-first_bid double
-number_of_bids integer
+first_bid double		//redundant?? same as currently?
+number_of_bids integer  //redundant?? can be obtained easily elsewhere
 started_time timestamp
 ends_time timestamp
 seller integer foreign key references User(id)
@@ -28,16 +28,16 @@ description text
 
 
 Bids (R):
-bidder integer foreign key references User(id)
+bidder integer foreign key references User(id)*
 item integer foreign key references Item(item_id)
 amount double 
-time timestamp
+time timestamp*
 
 
 ItemCategory (R):
-id integer foreign key references Item(item_id)
-id integer foreign key references Category(id)
+item id integer foreign key references Item(item_id)*
+category id integer foreign key references Category(id)*
 
 Category (E):
-id integer primary key
+id integer primary key*
 name text
