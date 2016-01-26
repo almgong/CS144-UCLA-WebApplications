@@ -1,5 +1,3 @@
-Still need to prove satisfaction of requirements, but I used ER-design to create this
-
 Tables
 
 User (E): 

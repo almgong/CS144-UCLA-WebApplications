@@ -182,8 +182,8 @@ class MyParser {
         
         /* Fill in code here (you will probably need to write auxiliary
             methods). */
-        
-        
+        System.out.println(doc.getDocumentElement());
+        System.out.println("hooray");
         
         /**************************************************************/
         
@@ -214,6 +214,7 @@ class MyParser {
         
         /* Process all files listed on command line. */
         for (int i = 0; i < args.length; i++) {
+            System.out.println(args[i]);
             File currentFile = new File(args[i]);
             processFile(currentFile);
         }
