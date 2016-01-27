@@ -40,6 +40,16 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.ErrorHandler;
 
+/*for writing to files*/
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+//timestamp
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.util.Date;
 
 class MyParser {
     
@@ -180,14 +190,154 @@ class MyParser {
          * file. Use doc.getDocumentElement() to get the root Element. */
         System.out.println("Successfully parsed - " + xmlFile);
         
-        /* Fill in code here (you will probably need to write auxiliary
-            methods). */
-        System.out.println(doc.getDocumentElement());
-        System.out.println("hooray");
+        /* Our Code, get root and array of all Item Elements */
+        Element e = doc.getDocumentElement();
+        Element[] items = getElementsByTagNameNR(e, "Item");
+
+        for(int i = 0; i < items.length; i++) {
+            //System.out.println(getElementTextByTagNameNR(items[i], "Name"));
+            parseItem(items[i]); //parse and writes as needed
+        }
         
         /**************************************************************/
         
     }
+
+
+    /********************* Custom Helpers *************************/
+
+    /**
+     * Given an Item node, parse it and add to the respective files the CSV
+     * values.
+    **/
+    public static void parseItem(Element e) {
+        //filenames of files for each relation in schema
+        String userFile = "../../../../../sql/User.csv",
+            itemFile = "../../../../../sql/Item.csv",
+            bidsFile = "../../../../../sql/Bids.csv",
+            itemCategoryFile = "../../../../../sql/ItemCategory.csv",
+            categoryFile = "../../../../../sql/Category.csv"; //may need to change in final****
+
+        //note the User parsing is the only place duplicates can happen, if a user is a seller and bidder
+        //TODO: need to do duplicate elimination 
+        String userRow = parseUserData(e); //a string ready to be added to file
+
+        //parse items
+        String itemRow = parseItemData(e);
+        System.out.println(itemRow);
+
+        //code that writes each xxxRow variable to appropriate file
+    }
+
+    /**
+     * Writes 'data' to file specified by 'filename'.
+    **/
+    public static void writeToFile(String filename, byte[] data) {
+        File file;
+        FileOutputStream fstream = null;
+
+        try {
+
+            file = new File(filename);
+            fstream = new FileOutputStream(file);
+
+            if(!file.exists()) {
+                file.createNewFile(); 
+            }
+
+            fstream.write(data);
+            fstream.flush();
+            fstream.close();
+        }
+        catch(IOException e) {
+            System.err.println("IOException in writeToFile()");
+            System.exit(-1);
+        }
+        catch(Exception e) {
+            System.err.println("Exception in writeToFile()");
+            System.exit(-1);
+        }
+        finally {
+            try {
+                if(fstream != null) {
+                    fstream.close();
+                }
+            }
+            catch(Exception e) {
+                System.err.println("Unexpected error in closing file");
+            }
+        }
+    }
+
+
+    /**
+     * Returns formatted CSV string for row(s) for the input element
+    **/
+    public static String parseUserData(Element e) {
+        //vars to potentially populate
+        String userID, bidderRating, sellerRating, location, country;
+        userID=bidderRating=sellerRating=location=country = "NULL"; 
+
+        Element seller = getElementByTagNameNR(e, "Seller");
+        userID = seller.getAttribute("UserID");
+        sellerRating = seller.getAttribute("Rating");
+
+        //code to deal with bidders
+        
+
+        return (userID+","+bidderRating+","+sellerRating+","+location+","+
+            country);
+    }
+
+    //same as above, but for Item relation
+    public static String parseItemData(Element e) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        String itemID, name, buyPrice, currently, firstBid,
+        numBids, start, end, seller, location, latitude, longitude,
+        country, description;
+
+        itemID=name=buyPrice=currently=firstBid=numBids=start=end=seller=
+        location=latitude=longitude=
+        country=description= "NULL";
+
+        itemID = e.getAttribute("ItemID");
+        name = getElementTextByTagNameNR(e, "Name");
+        buyPrice = strip(getElementTextByTagNameNR(e, "Buy_Price"));
+
+        currently = strip(getElementTextByTagNameNR(e, "Currently"));
+        firstBid = strip(getElementTextByTagNameNR(e, "First_Bid"));
+
+        numBids = getElementTextByTagNameNR(e, "Number_of_Bids");
+
+        start = getElementTextByTagNameNR(e, "Started");
+        end = getElementTextByTagNameNR(e, "Ends");
+
+        seller = getElementByTagNameNR(e, "Seller").getAttribute("UserID");
+        location = getElementTextByTagNameNR(e, "Location");
+
+        latitude = getElementByTagNameNR(e, "Location").getAttribute("Latitude");
+        longitude = getElementByTagNameNR(e, "Location").getAttribute("Longitude");
+
+        country = getElementTextByTagNameNR(e, "Country");
+        description = getElementTextByTagNameNR(e, "Description");
+        description = description.substring(0, 
+            Math.min(4000, description.length()));  //truncate to 4000 max
+
+        //checks
+        if(buyPrice.equals("")) buyPrice = "NULL";
+        if(latitude.equals("")) latitude = "NULL";
+        if(longitude.equals("")) longitude = "NULL";
+
+        start = format.parse(start); //left off here, date conversion*************
+
+        return itemID+","+name+","+ buyPrice+","+ currently+","+ firstBid+","+
+        numBids+","+ start+","+ end+","+ seller+","+ location+","+ latitude+","+ 
+        longitude+","+country+","+ description;
+    }
+
+    /***************** End Custom Helpers ************************/
+
     
     public static void main (String[] args) {
         if (args.length == 0) {

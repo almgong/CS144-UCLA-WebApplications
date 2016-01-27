@@ -4,6 +4,7 @@
     <property name="src-dir" location="src" />
     <property name="obj-dir" location="bin" />
     <property name="lib-dir" location="lib" />
+    <property name="sql-data-dir" location="sql" />
     <property environment="env" />
     <path id="classpath">
         <fileset dir="${lib-dir}" includes="**/*.jar"/>
@@ -13,6 +14,7 @@
     <target name="init">
         <mkdir dir="${obj-dir}"/>
         <mkdir dir="${lib-dir}"/>
+        <mkdir dir="${sql-data-dir}" />
     </target>
 
     <target name="clean">
