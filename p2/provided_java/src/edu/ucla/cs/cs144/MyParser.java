@@ -211,11 +211,11 @@ class MyParser {
     **/
     public static void parseItem(Element e) {
         //filenames of files for each relation in schema
-        String sellerFile = "sql/Seller.csv",
-            bidderFile = "sql/Bidder.csv",
-            itemFile = "sql/Item.csv",
-            bidsFile = "sql/Bids.csv",
-            itemCategoryFile = "sql/Category.csv"; //may need to change in final****
+        String sellerFile = "sql/Seller.dat",
+            bidderFile = "sql/Bidder.dat",
+            itemFile = "sql/Item.dat",
+            bidsFile = "sql/Bids.dat",
+            itemCategoryFile = "sql/Category.dat"; //may need to change in final****
 
         //Each string is a row to add to a particular file, given current Item
 
@@ -301,9 +301,8 @@ class MyParser {
         sellerRating = seller.getAttribute("Rating");
 
         Element locationEle = getElementByTagNameNR(e, "Location");
-        location = "\"" + getElementText(locationEle) + "\"";
-        country = "\"" + getElementText(getElementByTagNameNR(e, "Country")) + 
-            "\"";
+        location = getElementText(locationEle);
+        country = getElementText(getElementByTagNameNR(e, "Country"));
 
         lat = locationEle.getAttribute("Latitude");
         longitude = locationEle.getAttribute("Longitude");
@@ -312,8 +311,8 @@ class MyParser {
         if(lat.equals("")) lat = "NULL";
         if(longitude.equals("")) longitude = "NULL";
 
-        return (sellerID+","+location+","+country+","+lat+","+longitude+
-            ","+sellerRating+"\n");
+        return (sellerID+"\t"+location+"\t"+country+"\t"+lat+"\t"+longitude+
+            "\t"+sellerRating+"\n");
     }
 
     //special: string can be "" since there could be no bidders for an item
@@ -345,11 +344,11 @@ class MyParser {
                 "Country");
 
             //location and country for bidder is not required
-            if(locationEle!=null) location = "\""+getElementText(locationEle)+"\"";
-            if(countryEle!=null) country = "\""+getElementText(countryEle)+"\"";
+            if(locationEle!=null) location = getElementText(locationEle);
+            if(countryEle!=null) country = getElementText(countryEle);
  
 
-            bidString += (bidderID+","+location+","+country+","+rating+"\n");
+            bidString += (bidderID+"\t"+location+"\t"+country+"\t"+rating+"\n");
         }
 
         return bidString;
@@ -365,7 +364,7 @@ class MyParser {
         description= "NULL";
 
         itemID = e.getAttribute("ItemID");
-        name = "\"" + getElementTextByTagNameNR(e, "Name") + "\"";
+        name = getElementTextByTagNameNR(e, "Name");
         buyPrice = strip(getElementTextByTagNameNR(e, "Buy_Price"));
 
         currently = strip(getElementTextByTagNameNR(e, "Currently"));
@@ -379,8 +378,8 @@ class MyParser {
         seller = getElementByTagNameNR(e, "Seller").getAttribute("UserID");
 
         description = getElementTextByTagNameNR(e, "Description");
-        description = "\"" + description.substring(0, 
-            Math.min(4000, description.length())) + "\"";  //truncate to 4000 max
+        description = description.substring(0, 
+            Math.min(4000, description.length()));  //truncate to 4000 max
 
         //checks
         if(buyPrice.equals("")) buyPrice = "NULL";
@@ -388,8 +387,8 @@ class MyParser {
         start = getSQLTimestamp(start);
         end = getSQLTimestamp(end);
 
-        return (itemID+","+name+","+buyPrice+","+currently+","+firstBid+","+
-            start+","+end+","+seller+","+description+"\n");
+        return (itemID+"\t"+name+"\t"+buyPrice+"\t"+currently+"\t"+firstBid+"\t"+
+            start+"\t"+end+"\t"+seller+"\t"+description+"\n");
     }
 
 
@@ -400,7 +399,7 @@ class MyParser {
         itemID = e.getAttribute("ItemID");
         Element[] categories = getElementsByTagNameNR(e, "Category");
         for(int i = 0; i < categories.length; i++) {
-            catString += (itemID+","+"\""+getElementText(categories[i])+"\""+"\n"); 
+            catString += (itemID+"\t"+getElementText(categories[i])+"\n"); 
         }
 
         return catString;
@@ -449,7 +448,7 @@ class MyParser {
             timestamp = getElementTextByTagNameNR(bids[i], "Time");
             timestamp = getSQLTimestamp(timestamp);
 
-            bidString += (bidderID+","+itemID+","+amount+","+timestamp+"\n");
+            bidString += (bidderID+"\t"+itemID+"\t"+amount+"\t"+timestamp+"\n");
         }
         return bidString;
     }
