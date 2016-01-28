@@ -1,11 +1,19 @@
 Tables
+		
+Seller (E):		
+seller_id text primary key*
+location text 
+country text
+latitude text (NULL OK)
+longitude text (NULL OK)
+rating integer 
 
-User (E): 
-user text UNIQUE primary key*
-bidder_rating integer  (NULL OK)
-seller_rating integer (NULL OK)
-location text (NUll OK)
-country text (NULL OK)
+
+Bidder (E):
+bidder_id text primary key*
+location text
+country text
+rating integer 
 
 
 Item (E):
@@ -17,25 +25,17 @@ first_bid double
 number_of_bids integer  //redundant?? can be obtained easily elsewhere
 started_time timestamp
 ends_time timestamp
-seller integer foreign key references User(id)
-location text
-latitude double (NULL OK)
-longitude double (NULL OK)
-country text
+seller integer foreign key references Seller(id)
 description text
 
 
 Bids (R):
-bidder integer foreign key references User(id)*
+bidder integer foreign key references Bidder(id)*
 item integer foreign key references Item(item_id)
 amount double 
 time timestamp*
 
 
-ItemCategory (R):
+ItemCategory (R): 
 item id integer foreign key references Item(item_id)*
-category id integer foreign key references Category(id)*
-
-Category (E):
-id integer primary key*
-name text
+category text*

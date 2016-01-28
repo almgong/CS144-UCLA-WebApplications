@@ -1,32 +1,39 @@
 Part B Design Your Relational Schema:
 
-1. 
+1. Keys (Candidate)
 
-User
-	Keys: username
+Seller:
+	seller_id
+
+Bidder
+	bidder_id
 
 Item:
 	item_id
 
 Bids:
-	keys: bidder(user), time 
+	bidder_id, time 
 
 ItemCategory:
 
 	item, category
 
-Category:
-
-	id
 
 2. Functional dependencies (completely nontrivial)
 
-ItemId -> name, category, currently, buy_price, first bid, number_of_bids, bids, location, country, started, ends, seller, description
+ItemId -> name, currently, buy_price, first bid, number_of_bids, bids, location,
+lat, long, country, started, ends, seller, description
 
-bidder(user), time(of bid) -> amount, item
+UserID/SellerID -> seller_rating, location, lat, long, country
 
-username -> location, country, rating
+UserID/BidderID -> bidder_rating, location, country
 
-3. BCNF: if all FDs X->Y are either trivial or superkeys. Check!
+BidderID, Time(of bid) -> amount, item
 
-4. 4NF - loads of multivalued dependencies but all X: X->->Y are super keys for their relations (in schema). Check!
+All express Superkeys.
+
+3. BCNF: if all FDs X->Y in schema are either trivial or superkeys. Check!
+
+4. 4NF - if all X->->Y in schema are either trivial or X is a superkey. Check!
+	No violations of 4NF in any of our tables.
+
