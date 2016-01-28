@@ -227,6 +227,9 @@ class MyParser {
         String itemRow = parseItemData(e);
 
 
+        //parse for ItemCategory
+        String itemCategoryRow = parseItemCategoryData(e);
+
         //code that writes each xxxRow variable to appropriate file
         //should skip write if the string is empty "" only for bidderRow!!!
     }
@@ -295,7 +298,7 @@ class MyParser {
         if(longitude.equals("")) longitude = "NULL";
 
         return (sellerID+","+location+","+country+","+lat+","+longitude+
-            ","+sellerRating);
+            ","+sellerRating+"\n");
     }
 
     //special: string can be "" since there could be no bidders for an item
@@ -326,6 +329,7 @@ class MyParser {
             countryEle = getElementByTagNameNR(bidderEle,
                 "Country");
 
+            //location and country for bidder is not required
             if(locationEle!=null) location = getElementText(locationEle);
             if(countryEle!=null) country = getElementText(countryEle);
  
@@ -338,8 +342,7 @@ class MyParser {
 
     //same as above, but for Item relation
     public static String parseItemData(Element e) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+       
         String itemID, name, buyPrice, currently, firstBid,
         numBids, start, end, seller, description;
 
@@ -367,10 +370,43 @@ class MyParser {
         //checks
         if(buyPrice.equals("")) buyPrice = "NULL";
 
-       // start = format.parse(start); //left off here, date conversion*************
+        start = getSQLTimestamp(start);
+        System.out.println(start);
 
-        return itemID+","+name+","+buyPrice+","+currently+","+firstBid+","+
-        numBids+","+ start+","+end+","+seller+","+description;
+
+        return (itemID+","+name+","+buyPrice+","+currently+","+firstBid+","+
+        numBids+","+ start+","+end+","+seller+","+description+"\n");
+    }
+
+
+    public static String parseItemCategoryData(Element e) {
+        String itemID = "NULL";
+        String catString = "";
+
+        itemID = e.getAttribute("ItemID");
+        Element[] categories = getElementsByTagNameNR(e, "Category");
+        for(int i = 0; i < categories.length; i++) {
+            catString += (itemID+","+getElementText(categories[i])+"\n"); 
+        }
+
+        return catString;
+    }
+
+    public static String getSQLTimestamp(String origTime) {
+        SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String ret = "";
+         try {
+            String inputFormat = "MMM-dd-yy HH:mm:ss";
+            DateFormat df = new SimpleDateFormat(inputFormat);
+            Date d = df.parse(origTime);
+            ret = targetFormat.format(d);
+        }
+        catch(ParseException ex) {
+            System.err.println("Error in parse");
+            System.exit(-1);
+        }
+
+        return ret;
     }
 
     /***************** End Custom Helpers ************************/

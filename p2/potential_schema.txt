@@ -11,8 +11,8 @@ rating integer
 
 Bidder (E):						//can have duplicates
 bidder_id text primary key*
-location text
-country text
+location text (NULL OK)
+country text (NULL OK)
 rating integer 
 
 
@@ -22,7 +22,6 @@ name text
 buy_price (NULL OK)
 currently double 
 first_bid double		
-number_of_bids integer  //redundant?? can be obtained easily elsewhere
 started_time timestamp
 ends_time timestamp
 seller integer foreign key references Seller(id)
@@ -30,7 +29,7 @@ description text
 
 
 Bids (R):
-bidder integer foreign key references Bidder(id)*
+bidder text foreign key references Bidder(id)*
 item integer foreign key references Item(item_id)
 amount double 
 time timestamp*
