@@ -226,7 +226,7 @@ class MyParser {
         //parse Items
         String itemRow = parseItemData(e);
 
-
+        String bidRow = parseBidsData(e);
         //code that writes each xxxRow variable to appropriate file
         //should skip write if the string is empty "" only for bidderRow!!!
     }
@@ -371,6 +371,38 @@ class MyParser {
 
         return itemID+","+name+","+buyPrice+","+currently+","+firstBid+","+
         numBids+","+ start+","+end+","+seller+","+description;
+    }
+
+    public static String parseBidsData (Element e) {        
+        String itemID, bidderID, amount, timestamp;
+
+        itemID=bidderID=amount=timestamp="NULL";   
+
+        itemID = e.getAttribute("ItemID");  
+
+        String bidString = "";  //the final string, can have multiple bidders
+
+        //array of Bid elements
+        Element[] bids = getElementsByTagNameNR(getElementByTagNameNR(e, "Bids"), 
+            "Bid");
+
+        //for each bid
+        Element bidderEle = null;
+        Element amountEle = null;
+        for(int i=0; i< bids.length; i++) {
+            bidderEle = getElementByTagNameNR(bids[i], "Bidder");
+            bidderID = bidderEle.getAttribute("UserID");
+
+            amount = getElementTextByTagNameNR(bids[i], "Amount");
+            amount = strip(amount);
+ 
+            timestamp = getElementTextByTagNameNR(bids[i], "Time");
+            timestamp = getSQLTimestamp(timestamp);
+
+            bidString += (bidderID+","+itemID+","+amount+","+timestamp+"\n");
+        }
+        System.out.println(bidString);
+        return bidString;
     }
 
     /***************** End Custom Helpers ************************/
