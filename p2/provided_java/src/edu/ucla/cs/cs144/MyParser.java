@@ -352,7 +352,7 @@ class MyParser {
         description= "NULL";
 
         itemID = e.getAttribute("ItemID");
-        name = getElementTextByTagNameNR(e, "Name");
+        name = "\"" + getElementTextByTagNameNR(e, "Name") + "\"";
         buyPrice = strip(getElementTextByTagNameNR(e, "Buy_Price"));
 
         currently = strip(getElementTextByTagNameNR(e, "Currently"));
@@ -366,8 +366,8 @@ class MyParser {
         seller = getElementByTagNameNR(e, "Seller").getAttribute("UserID");
 
         description = getElementTextByTagNameNR(e, "Description");
-        description = description.substring(0, 
-            Math.min(4000, description.length()));  //truncate to 4000 max
+        description = "\"" + description.substring(0, 
+            Math.min(4000, description.length())) + "\"";  //truncate to 4000 max
 
         //checks
         if(buyPrice.equals("")) buyPrice = "NULL";
@@ -387,7 +387,7 @@ class MyParser {
         itemID = e.getAttribute("ItemID");
         Element[] categories = getElementsByTagNameNR(e, "Category");
         for(int i = 0; i < categories.length; i++) {
-            catString += (itemID+","+getElementText(categories[i])+"\n"); 
+            catString += (itemID+","+"\""+getElementText(categories[i])+"\""+"\n"); 
         }
 
         return catString;
