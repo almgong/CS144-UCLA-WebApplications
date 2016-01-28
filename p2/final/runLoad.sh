@@ -1,11 +1,11 @@
 #automate P2 Database transformation and set up
 
 #make sure all tables are refreshed
-mysql TEST < drop.sql
-mysql TEST < create.sql
+mysql CS144 < drop.sql
+mysql CS144 < create.sql
 
 #compile and run Java
-ant -f build.xml run-all
+ant -f build.xml run
 
 #remove duplicates
 sort -u sql/Seller.dat > sql/SellerSorted.dat
@@ -16,7 +16,7 @@ sort -u sql/Category.dat > sql/CategorySorted.dat
 ###etc.
 
 #now load all .dat files into their respective DB locations
-mysql TEST < load.sql
+mysql CS144 < load.sql
 
 #remove temporary files, all sql dat files 
 rm -rf sql
