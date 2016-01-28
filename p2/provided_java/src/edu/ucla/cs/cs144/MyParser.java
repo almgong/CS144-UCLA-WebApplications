@@ -195,7 +195,6 @@ class MyParser {
         Element[] items = getElementsByTagNameNR(e, "Item");
 
         for(int i = 0; i < items.length; i++) {
-            //System.out.println(getElementTextByTagNameNR(items[i], "Name"));
             parseItem(items[i]); //parse and writes as needed
         }
         
@@ -212,25 +211,28 @@ class MyParser {
     **/
     public static void parseItem(Element e) {
         //filenames of files for each relation in schema
-        String userFile = "../../../../../sql/User.csv",
+        String sellerFile = "../../../../../sql/Seller.csv",
+            bidderFile = "../../../../../sql/Bidder.csv",
             itemFile = "../../../../../sql/Item.csv",
             bidsFile = "../../../../../sql/Bids.csv",
-            itemCategoryFile = "../../../../../sql/ItemCategory.csv",
-            categoryFile = "../../../../../sql/Category.csv"; //may need to change in final****
+            itemCategoryFile = "../../../../../sql/Category.csv"; //may need to change in final****
 
-        //note the User parsing is the only place duplicates can happen, if a user is a seller and bidder
-        //TODO: need to do duplicate elimination 
-        String userRow = parseUserData(e); //a string ready to be added to file
+        //Each string is a row to add to a particular file, given current Item
 
-        //parse items
+        //parse Sellers and Bidders 
+        String sellerRow = parseSellerData(e);
+        String bidderRow = parseBidderData(e);
+
+        //parse Items
         String itemRow = parseItemData(e);
-        System.out.println(itemRow);
+
 
         //code that writes each xxxRow variable to appropriate file
+        //should skip write if the string is empty "" only for bidderRow!!!
     }
 
     /**
-     * Writes 'data' to file specified by 'filename'.
+     * Writes bytes of 'data' to file specified by 'filename'.
     **/
     public static void writeToFile(String filename, byte[] data) {
         File file;
@@ -239,7 +241,7 @@ class MyParser {
         try {
 
             file = new File(filename);
-            fstream = new FileOutputStream(file);
+            fstream = new FileOutputStream(file, true); //true to append
 
             if(!file.exists()) {
                 file.createNewFile(); 
@@ -273,20 +275,65 @@ class MyParser {
     /**
      * Returns formatted CSV string for row(s) for the input element
     **/
-    public static String parseUserData(Element e) {
+    public static String parseSellerData(Element e) {
         //vars to potentially populate
-        String userID, bidderRating, sellerRating, location, country;
-        userID=bidderRating=sellerRating=location=country = "NULL"; 
+        String sellerID, sellerRating, location, country, lat, longitude;
+        sellerID=sellerRating=location=country=lat=longitude="NULL"; 
 
         Element seller = getElementByTagNameNR(e, "Seller");
-        userID = seller.getAttribute("UserID");
+        sellerID = seller.getAttribute("UserID");
         sellerRating = seller.getAttribute("Rating");
 
-        //code to deal with bidders
-        
+        Element locationEle = getElementByTagNameNR(e, "Location");
+        location = getElementText(locationEle);
+        country = getElementText(getElementByTagNameNR(e, "Country"));
+        lat = locationEle.getAttribute("Latitude");
+        longitude = locationEle.getAttribute("Longitude");
 
-        return (userID+","+bidderRating+","+sellerRating+","+location+","+
-            country);
+        //null checks
+        if(lat.equals("")) lat = "NULL";
+        if(longitude.equals("")) longitude = "NULL";
+
+        return (sellerID+","+location+","+country+","+lat+","+longitude+
+            ","+sellerRating);
+    }
+
+    //special: string can be "" since there could be no bidders for an item
+    public static String parseBidderData(Element e) {
+        String bidderID, location, country, rating;
+        bidderID = location = country = rating = "NULL";
+
+        Element locationEle, countryEle;
+
+        String bidString = "";  //the final string, can have multiple bidders
+
+        //array of Bid elements
+        Element[] bids = getElementsByTagNameNR(getElementByTagNameNR(e, "Bids"), 
+            "Bid");
+
+        //for each bid
+        Element bidderEle = null;
+        for(int i=0; i< bids.length; i++) {
+            bidderEle = getElementByTagNameNR(bids[i], "Bidder");
+
+            bidderID = bidderEle.getAttribute("UserID");
+            rating = bidderEle.getAttribute("Rating");
+            location = "NULL";
+            country = "NULL";
+
+            locationEle = getElementByTagNameNR(bidderEle, 
+                "Location");
+            countryEle = getElementByTagNameNR(bidderEle,
+                "Country");
+
+            if(locationEle!=null) location = getElementText(locationEle);
+            if(countryEle!=null) country = getElementText(countryEle);
+ 
+
+            bidString += (bidderID+","+location+","+country+","+rating+"\n");
+        }
+
+        return bidString;
     }
 
     //same as above, but for Item relation
@@ -294,12 +341,10 @@ class MyParser {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         String itemID, name, buyPrice, currently, firstBid,
-        numBids, start, end, seller, location, latitude, longitude,
-        country, description;
+        numBids, start, end, seller, description;
 
         itemID=name=buyPrice=currently=firstBid=numBids=start=end=seller=
-        location=latitude=longitude=
-        country=description= "NULL";
+        description= "NULL";
 
         itemID = e.getAttribute("ItemID");
         name = getElementTextByTagNameNR(e, "Name");
@@ -314,26 +359,18 @@ class MyParser {
         end = getElementTextByTagNameNR(e, "Ends");
 
         seller = getElementByTagNameNR(e, "Seller").getAttribute("UserID");
-        location = getElementTextByTagNameNR(e, "Location");
 
-        latitude = getElementByTagNameNR(e, "Location").getAttribute("Latitude");
-        longitude = getElementByTagNameNR(e, "Location").getAttribute("Longitude");
-
-        country = getElementTextByTagNameNR(e, "Country");
         description = getElementTextByTagNameNR(e, "Description");
         description = description.substring(0, 
             Math.min(4000, description.length()));  //truncate to 4000 max
 
         //checks
         if(buyPrice.equals("")) buyPrice = "NULL";
-        if(latitude.equals("")) latitude = "NULL";
-        if(longitude.equals("")) longitude = "NULL";
 
-        start = format.parse(start); //left off here, date conversion*************
+       // start = format.parse(start); //left off here, date conversion*************
 
-        return itemID+","+name+","+ buyPrice+","+ currently+","+ firstBid+","+
-        numBids+","+ start+","+ end+","+ seller+","+ location+","+ latitude+","+ 
-        longitude+","+country+","+ description;
+        return itemID+","+name+","+buyPrice+","+currently+","+firstBid+","+
+        numBids+","+ start+","+end+","+seller+","+description;
     }
 
     /***************** End Custom Helpers ************************/

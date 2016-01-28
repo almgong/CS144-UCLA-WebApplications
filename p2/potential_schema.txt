@@ -1,6 +1,6 @@
 Tables
 		
-Seller (E):		
+Seller (E):						//can have duplicates
 seller_id text primary key*
 location text 
 country text
@@ -9,7 +9,7 @@ longitude text (NULL OK)
 rating integer 
 
 
-Bidder (E):
+Bidder (E):						//can have duplicates
 bidder_id text primary key*
 location text
 country text
