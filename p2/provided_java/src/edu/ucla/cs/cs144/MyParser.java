@@ -221,11 +221,13 @@ class MyParser {
 
         //parse Sellers and Bidders 
         String sellerRow = parseSellerData(e);
-        String bidderRow = parseBidderData(e);
+        String bidderRow = parseBidderData(e);  //can return empty string
 
         //parse Items
         String itemRow = parseItemData(e);
 
+        //parse for Bids, can be empty string
+        String bidsRow = parseBidsData(e);
 
         //parse for ItemCategory
         String itemCategoryRow = parseItemCategoryData(e);
@@ -356,7 +358,7 @@ class MyParser {
         currently = strip(getElementTextByTagNameNR(e, "Currently"));
         firstBid = strip(getElementTextByTagNameNR(e, "First_Bid"));
 
-        numBids = getElementTextByTagNameNR(e, "Number_of_Bids");
+        //numBids = getElementTextByTagNameNR(e, "Number_of_Bids");
 
         start = getElementTextByTagNameNR(e, "Started");
         end = getElementTextByTagNameNR(e, "Ends");
@@ -371,11 +373,10 @@ class MyParser {
         if(buyPrice.equals("")) buyPrice = "NULL";
 
         start = getSQLTimestamp(start);
-        System.out.println(start);
-
+        end = getSQLTimestamp(end);
 
         return (itemID+","+name+","+buyPrice+","+currently+","+firstBid+","+
-        numBids+","+ start+","+end+","+seller+","+description+"\n");
+            start+","+end+","+seller+","+description+"\n");
     }
 
 
