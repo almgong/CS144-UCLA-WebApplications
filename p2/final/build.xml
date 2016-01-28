@@ -1,13 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="run" basedir="." name="p2">
+<project default="compile" basedir="." name="p2">
+	<property name="src-dir" location="src" />
+	<property name="obj-dir" location="bin" />
+	<property name="lib-dir" location="lib" />
+	<property name="sql-data-dir" location="sql" />
+	<property name="debug-lvl" value="source, lines, vars" />
+	<property name="java-file-location" value="fun/package/name/cs144/*.java" />
+	<property name="java-classname" value="fun.package.name.cs144.MyParser" />
+	<property environment="env" />
+
+	<path id="class-path">
+		<fileset dir="${lib-dir}" includes="**/*.jar" />
+		<pathelement location="${obj-dir}" />
+	</path>
 	
+	<!-- any init work -->
 	<target name="prep">
+		<echo message="Creating object and sql directories..." />
+		<mkdir dir="${obj-dir}" />
+		<mkdir dir="${sql-data-dir}" />
 	</target>
 
+	<!-- compile into bin/ -->
 	<target name="compile" depends="prep">
+		<echo message="Compiling Java files..." />
+		<javac includeantruntime="false" debug="true" srcdir="${src-dir}" destdir="${obj-dir}" includes="${java-file-location}">
+			<classpath refid="class-path" />
+		</javac>
 	</target>
 
+	<!-- actually running java now, on just one items-@.xml -->
 	<target name="run" depends="compile">
+		<java classname="${java-classname}" failonerror="true" fork="yes">
+			<classpath refid="class-path" />
+			<arg value="${env.EBAYDATA}/items-7.xml" />
+		</java>
 	</target>
 
 	<target name="run-all" depends="compile">

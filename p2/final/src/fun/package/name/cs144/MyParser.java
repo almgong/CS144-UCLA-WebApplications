@@ -1,6 +1,6 @@
 /* CS144
  *
- * Parser skeleton for processing item-???.xml files. Must be compiled in
+ * Completed Parser for processing item-???.xml files. Must be compiled in
  * JDK 1.5 or above.
  *
  * Instructions:
