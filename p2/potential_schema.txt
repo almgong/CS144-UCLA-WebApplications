@@ -2,10 +2,6 @@ Tables
 		
 Seller (E):						//can have duplicates
 seller_id text primary key*
-location text 
-country text
-latitude text (NULL OK)
-longitude text (NULL OK)
 rating integer 
 
 
@@ -24,6 +20,10 @@ currently double
 first_bid double		
 started_time timestamp
 ends_time timestamp
+latitude text (NULL OK)
+longitude text (NULL OK)
+location text 
+country text
 seller integer foreign key references Seller(id)
 description text
 

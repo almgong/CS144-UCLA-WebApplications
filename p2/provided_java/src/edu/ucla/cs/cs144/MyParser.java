@@ -293,26 +293,14 @@ class MyParser {
     **/
     public static String parseSellerData(Element e) {
         //vars to potentially populate
-        String sellerID, sellerRating, location, country, lat, longitude;
-        sellerID=sellerRating=location=country=lat=longitude="NULL"; 
+        String sellerID, sellerRating;
+        sellerID=sellerRating="NULL"; 
 
         Element seller = getElementByTagNameNR(e, "Seller");
         sellerID = seller.getAttribute("UserID");
         sellerRating = seller.getAttribute("Rating");
 
-        Element locationEle = getElementByTagNameNR(e, "Location");
-        location = getElementText(locationEle);
-        country = getElementText(getElementByTagNameNR(e, "Country"));
-
-        lat = locationEle.getAttribute("Latitude");
-        longitude = locationEle.getAttribute("Longitude");
-
-        //null checks
-        if(lat.equals("")) lat = "NULL";
-        if(longitude.equals("")) longitude = "NULL";
-
-        return (sellerID+"\t"+location+"\t"+country+"\t"+lat+"\t"+longitude+
-            "\t"+sellerRating+"\n");
+        return (sellerID+"\t"+sellerRating+"\n");
     }
 
     //special: string can be "" since there could be no bidders for an item
@@ -358,7 +346,7 @@ class MyParser {
     public static String parseItemData(Element e) {
        
         String itemID, name, buyPrice, currently, firstBid,
-        numBids, start, end, seller, description;
+        numBids, start, end, seller, description, location, country, lat, longitude;
 
         itemID=name=buyPrice=currently=firstBid=numBids=start=end=seller=
         description= "NULL";
@@ -387,8 +375,19 @@ class MyParser {
         start = getSQLTimestamp(start);
         end = getSQLTimestamp(end);
 
-        return (itemID+"\t"+name+"\t"+buyPrice+"\t"+currently+"\t"+firstBid+"\t"+
-            start+"\t"+end+"\t"+seller+"\t"+description+"\n");
+        Element locationEle = getElementByTagNameNR(e, "Location");
+        location = getElementText(locationEle);
+        country = getElementText(getElementByTagNameNR(e, "Country"));
+
+        lat = locationEle.getAttribute("Latitude");
+        longitude = locationEle.getAttribute("Longitude");
+
+        //null checks
+        if(lat.equals("")) lat = "NULL";
+        if(longitude.equals("")) longitude = "NULL";
+
+        return (itemID+"\t"+name+"\t"+buyPrice+"\t"+currently+"\t"+firstBid+"\t"+start+"\t"+end+
+            "\t"+seller+"\t"+description+"\t"+location+"\t"+country+"\t"+lat+"\t"+longitude+"\n");
     }
 
 
