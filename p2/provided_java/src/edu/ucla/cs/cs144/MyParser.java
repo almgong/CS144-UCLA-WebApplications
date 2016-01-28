@@ -211,11 +211,11 @@ class MyParser {
     **/
     public static void parseItem(Element e) {
         //filenames of files for each relation in schema
-        String sellerFile = "../../../../../sql/Seller.csv",
-            bidderFile = "../../../../../sql/Bidder.csv",
-            itemFile = "../../../../../sql/Item.csv",
-            bidsFile = "../../../../../sql/Bids.csv",
-            itemCategoryFile = "../../../../../sql/Category.csv"; //may need to change in final****
+        String sellerFile = "sql/Seller.csv",
+            bidderFile = "sql/Bidder.csv",
+            itemFile = "sql/Item.csv",
+            bidsFile = "sql/Bids.csv",
+            itemCategoryFile = "sql/Category.csv"; //may need to change in final****
 
         //Each string is a row to add to a particular file, given current Item
 
@@ -233,7 +233,17 @@ class MyParser {
         String itemCategoryRow = parseItemCategoryData(e);
 
         //code that writes each xxxRow variable to appropriate file
-        //should skip write if the string is empty "" only for bidderRow!!!
+        writeToFile(sellerFile, sellerRow.getBytes());
+
+        if(!bidderRow.equals(""))
+            writeToFile(bidderFile, bidderRow.getBytes());
+
+        writeToFile(itemFile, itemRow.getBytes());
+            
+        if(!bidsRow.equals(""))
+            writeToFile(bidsFile, bidsRow.getBytes());
+        
+        writeToFile(itemCategoryFile, itemCategoryRow.getBytes());
     }
 
     /**
@@ -246,17 +256,18 @@ class MyParser {
         try {
 
             file = new File(filename);
-            fstream = new FileOutputStream(file, true); //true to append
-
             if(!file.exists()) {
                 file.createNewFile(); 
             }
+            
+            fstream = new FileOutputStream(file, true); //true to append
 
             fstream.write(data);
             fstream.flush();
             fstream.close();
         }
         catch(IOException e) {
+            e.printStackTrace();
             System.err.println("IOException in writeToFile()");
             System.exit(-1);
         }
