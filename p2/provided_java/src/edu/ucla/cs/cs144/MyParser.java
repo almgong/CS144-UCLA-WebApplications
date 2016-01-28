@@ -370,7 +370,7 @@ class MyParser {
             Math.min(4000, description.length()));  //truncate to 4000 max
 
         //checks
-        if(buyPrice.equals("")) buyPrice = "NULL";
+        if(buyPrice.equals("")) buyPrice = "\\N";
 
         start = getSQLTimestamp(start);
         end = getSQLTimestamp(end);
