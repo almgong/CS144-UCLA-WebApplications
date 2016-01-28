@@ -438,7 +438,6 @@ class MyParser {
 
             bidString += (bidderID+","+itemID+","+amount+","+timestamp+"\n");
         }
-        System.out.println(bidString);
         return bidString;
     }
 
