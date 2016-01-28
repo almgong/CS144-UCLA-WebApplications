@@ -301,8 +301,10 @@ class MyParser {
         sellerRating = seller.getAttribute("Rating");
 
         Element locationEle = getElementByTagNameNR(e, "Location");
-        location = getElementText(locationEle);
-        country = getElementText(getElementByTagNameNR(e, "Country"));
+        location = "\"" + getElementText(locationEle) + "\"";
+        country = "\"" + getElementText(getElementByTagNameNR(e, "Country")) + 
+            "\"";
+
         lat = locationEle.getAttribute("Latitude");
         longitude = locationEle.getAttribute("Longitude");
 
@@ -343,8 +345,8 @@ class MyParser {
                 "Country");
 
             //location and country for bidder is not required
-            if(locationEle!=null) location = getElementText(locationEle);
-            if(countryEle!=null) country = getElementText(countryEle);
+            if(locationEle!=null) location = "\""+getElementText(locationEle)+"\"";
+            if(countryEle!=null) country = "\""+getElementText(countryEle)+"\"";
  
 
             bidString += (bidderID+","+location+","+country+","+rating+"\n");
