@@ -37,7 +37,15 @@
 		</java>
 	</target>
 
+	<!-- runs on all ebay data in the EBAY_DATA dir -->
 	<target name="run-all" depends="compile">
+		<fileset id="ebay-files" dir="${env.EBAY_DATA}" includes="items-*.xml" />
+		<pathconvert property="ebay-data-as-args" pathsep=" " refid="ebay-files" />
+
+		<java classname="${java-classname}" failonerror="true" fork="yes">
+			<arg line="${ebay-data-as-args}" />
+			<classpath refid="${class-path}" />
+		</java>
 	</target>
 	
 </project>
