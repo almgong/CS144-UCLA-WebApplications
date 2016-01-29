@@ -1,11 +1,11 @@
 Part B Design Your Relational Schema:
 
-1. Keys (Candidate)
+1. Keys
 
 Seller:
 	seller_id
 
-Bidder
+Bidder:
 	bidder_id
 
 Item:
@@ -15,7 +15,6 @@ Bids:
 	bidder_id, time 
 
 ItemCategory:
-
 	item, category
 
 
@@ -36,4 +35,12 @@ All express Superkeys.
 
 4. 4NF - if all X->->Y in schema are either trivial or X is a superkey. Check!
 	No violations of 4NF in any of our tables.
+	Initially we had the category attribute in item, but this was a MVD 
+	that violated 4N, so we removed it by creating a ItemCategory relation.
 
+
+Other notes:
+
+We did not include the attribute "number of bids" into our Item table because
+we felt that it was easily obtainable with a single join query. Therefore, we 
+left it out in efforts of reducing redundant information.
