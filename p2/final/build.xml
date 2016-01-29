@@ -17,6 +17,7 @@
 	<!-- any init work -->
 	<target name="prep">
 		<echo message="Creating object and sql directories..." />
+		<mkdir dir="${lib-dir}" />
 		<mkdir dir="${obj-dir}" />
 		<mkdir dir="${sql-data-dir}" />
 	</target>
