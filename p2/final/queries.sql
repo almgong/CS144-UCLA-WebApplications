@@ -1,11 +1,11 @@
 /* 1 */
-
+SELECT count(*) FROM (SELECT seller_id, bidder_id FROM Seller LEFT OUTER JOIN Bidder ON bidder_id = seller_id  UNION  SELECT seller_id, bidder_id FROM Seller RIGHT OUTER JOIN Bidder ON bidder_id = seller_id) as Users;
 
 /* 2 */
 select count(*) from Item where binary location='New York';
 
 /* 3 */
-
+select count(*) from (select count(category) as numCategories from ItemCategory GROUP BY item) as counts where counts.numCategories = 4;
 
 /* 4 */
 
