@@ -4,9 +4,9 @@
 	<property name="obj-dir" location="bin" />
 	<property name="lib-dir" location="lib" />
 	<property name="sql-data-dir" location="sql" />
-	<property name="debug-lvl" value="source, lines, vars" />
-	<property name="java-file-location" value="fun/package/name/cs144/*.java" />
-	<property name="java-classname" value="fun.package.name.cs144.MyParser" />
+	<property name="debug-lvl" value="source,lines,vars" />
+	<property name="java-file-location" value="our/project2/agmk/cs144/*.java" />
+	<property name="java-classname" value="our.project2.agmk.cs144.MyParser" />
 	<property environment="env" />
 
 	<path id="class-path">
@@ -25,7 +25,7 @@
 	<!-- compile into bin/ -->
 	<target name="compile" depends="prep">
 		<echo message="Compiling Java files..." />
-		<javac includeantruntime="false" debug="true" srcdir="${src-dir}" destdir="${obj-dir}" includes="${java-file-location}">
+		<javac includeantruntime="false" debug="true" debuglevel="${debug-lvl}" srcdir="${src-dir}" destdir="${obj-dir}" includes="${java-file-location}">
 			<classpath refid="class-path" />
 		</javac>
 	</target>
@@ -34,7 +34,7 @@
 	<target name="run" depends="compile">
 		<java classname="${java-classname}" failonerror="true" fork="yes">
 			<classpath refid="class-path" />
-			<arg value="${env.EBAYDATA}/items-7.xml" />
+			<arg value="${env.EBAY_DATA}/items-7.xml" />
 		</java>
 	</target>
 
@@ -45,7 +45,7 @@
 
 		<java classname="${java-classname}" failonerror="true" fork="yes">
 			<arg line="${ebay-data-as-args}" />
-			<classpath refid="${class-path}" />
+			<classpath refid="class-path" />
 		</java>
 	</target>
 	
