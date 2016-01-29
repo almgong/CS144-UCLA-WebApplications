@@ -8,7 +8,7 @@ select count(*) from Item where binary location='New York';
 select count(*) from (select count(category) as numCategories from ItemCategory GROUP BY item) as counts where counts.numCategories = 4;
 
 /* 4 */
-
+select item_id from (select item_id, max(currently) from Item, Bids where item_id = item AND end_time > '2001-12-20 00:00:01') as currentMax;
 
 /* 5 */
 select count(*) from Seller where rating>1000;
@@ -17,4 +17,5 @@ select count(*) from Seller where rating>1000;
 select count(*) from Seller,Bidder where seller_id=bidder_id;
 
 /* 7 */
+select count(*) from (select category from ItemCategory, (select item from Bids where amount > 100 group by item) as HighBids where ItemCategory.item = HighBids.Item group by Category) as categories;
 
