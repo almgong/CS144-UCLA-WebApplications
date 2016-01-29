@@ -40,11 +40,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.ErrorHandler;
 
-/*for writing to files*/
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 //timestamp
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -57,19 +52,19 @@ class MyParser {
     static DocumentBuilder builder;
     
     static final String[] typeName = {
-	"none",
-	"Element",
-	"Attr",
-	"Text",
-	"CDATA",
-	"EntityRef",
-	"Entity",
-	"ProcInstr",
-	"Comment",
-	"Document",
-	"DocType",
-	"DocFragment",
-	"Notation",
+    "none",
+    "Element",
+    "Attr",
+    "Text",
+    "CDATA",
+    "EntityRef",
+    "Entity",
+    "ProcInstr",
+    "Comment",
+    "Document",
+    "DocType",
+    "DocFragment",
+    "Notation",
     };
     
     static class MyErrorHandler implements ErrorHandler {
@@ -167,10 +162,11 @@ class MyParser {
             return nf.format(am).substring(1);
         }
     }
-    
+
     /* Process one items-???.xml file.
      */
-    static void processFile(File xmlFile) {
+    static void processFile(File xmlFile, BufferedWriter bwSeller, BufferedWriter bwBidder,
+     BufferedWriter bwItem, BufferedWriter bwBids, BufferedWriter bwCategory) {
         Document doc = null;
         try {
             doc = builder.parse(xmlFile);
@@ -191,11 +187,11 @@ class MyParser {
         System.out.println("Successfully parsed - " + xmlFile);
         
         /* Our Code, get root and array of all Item Elements */
-        Element e = doc.getDocumentElement();
-        Element[] items = getElementsByTagNameNR(e, "Item");
+        Element root = doc.getDocumentElement();
+        Element[] items = getElementsByTagNameNR(root, "Item");
 
         for(int i = 0; i < items.length; i++) {
-            parseItem(items[i]); //parse and writes as needed
+            parseItem(items[i], bwSeller, bwBidder, bwItem, bwBids, bwCategory); //parse and writes as needed
         }
         
         /**************************************************************/
@@ -209,13 +205,14 @@ class MyParser {
      * Given an Item node, parse it and add to the respective files the CSV
      * values.
     **/
-    public static void parseItem(Element e) {
+    public static void parseItem(Element e, BufferedWriter bwSeller, BufferedWriter bwBidder,
+     BufferedWriter bwItem, BufferedWriter bwBids, BufferedWriter bwCategory) {
         //filenames of files for each relation in schema
         String sellerFile = "sql/Seller.dat",
             bidderFile = "sql/Bidder.dat",
             itemFile = "sql/Item.dat",
             bidsFile = "sql/Bids.dat",
-            itemCategoryFile = "sql/Category.dat"; //may need to change in final****
+            itemCategoryFile = "sql/Category.dat"; 
 
         //Each string is a row to add to a particular file, given current Item
 
@@ -232,59 +229,24 @@ class MyParser {
         //parse for ItemCategory
         String itemCategoryRow = parseItemCategoryData(e);
 
-        //code that writes each xxxRow variable to appropriate file
-        writeToFile(sellerFile, sellerRow.getBytes());
-
-        if(!bidderRow.equals(""))
-            writeToFile(bidderFile, bidderRow.getBytes());
-
-        writeToFile(itemFile, itemRow.getBytes());
-            
-        if(!bidsRow.equals(""))
-            writeToFile(bidsFile, bidsRow.getBytes());
-        
-        writeToFile(itemCategoryFile, itemCategoryRow.getBytes());
-    }
-
-    /**
-     * Writes bytes of 'data' to file specified by 'filename'.
-    **/
-    public static void writeToFile(String filename, byte[] data) {
-        File file;
-        FileOutputStream fstream = null;
-
+        //write to buffered writers
         try {
-
-            file = new File(filename);
-            if(!file.exists()) {
-                file.createNewFile(); 
-            }
-            
-            fstream = new FileOutputStream(file, true); //true to append
-
-            fstream.write(data);
-            fstream.flush();
-            fstream.close();
+            bwSeller.write(sellerRow);
+            bwBidder.write(bidderRow);
+            bwItem.write(itemRow);
+            bwBids.write(bidsRow);
+            bwCategory.write(itemCategoryRow);
         }
-        catch(IOException e) {
-            e.printStackTrace();
-            System.err.println("IOException in writeToFile()");
+        catch(IOException ioe) {
+            ioe.printStackTrace();
+            System.err.println("Error in write in parseItem");
             System.exit(-1);
         }
-        catch(Exception e) {
-            System.err.println("Exception in writeToFile()");
+        catch(Exception ex) {
+            System.err.println("Error in parseItem");
             System.exit(-1);
         }
-        finally {
-            try {
-                if(fstream != null) {
-                    fstream.close();
-                }
-            }
-            catch(Exception e) {
-                System.err.println("Unexpected error in closing file");
-            }
-        }
+
     }
 
 
@@ -452,6 +414,11 @@ class MyParser {
         return bidString;
     }
 
+    public static void createFileIfNotExists(File f) throws IOException {
+
+        if(!f.exists()) f.createNewFile();
+    }
+
     /***************** End Custom Helpers ************************/
 
     
@@ -477,12 +444,80 @@ class MyParser {
             System.out.println("parser was unable to be configured");
             System.exit(2);
         }
+
+        /* File I/O */
+        //filenames of files for each relation in schema
+        String sellerFile = "sql/Seller.dat",
+            bidderFile = "sql/Bidder.dat",
+            itemFile = "sql/Item.dat",
+            bidsFile = "sql/Bids.dat",
+            itemCategoryFile = "sql/Category.dat"; 
+
+        File fileSeller, fileBidder, fileItem, fileBids, fileCategory;
+        FileWriter fwSeller, fwBidder, fwItem, fwBids, fwCategory;
+        BufferedWriter bwSeller, bwBidder, bwItem, bwBids, bwCategory;
+        bwSeller= bwBidder= bwItem= bwBids= bwCategory=null;
+        try {
+            //create files
+            fileSeller = new File(sellerFile);
+            fileBidder = new File(bidderFile);
+            fileItem = new File(itemFile);
+            fileBids = new File(bidsFile);
+            fileCategory = new File(itemCategoryFile);
+
+            createFileIfNotExists(fileSeller);
+            createFileIfNotExists(fileBidder);
+            createFileIfNotExists(fileItem);
+            createFileIfNotExists(fileBids);
+            createFileIfNotExists(fileCategory);
+
+            //initialize file writers
+            fwSeller = new FileWriter(fileSeller);
+            fwBidder = new FileWriter(fileBidder);
+            fwItem = new FileWriter(fileItem);
+            fwBids = new FileWriter(fileBids);
+            fwCategory = new FileWriter(fileCategory);
+
+            bwSeller = new BufferedWriter(fwSeller);
+            bwBidder = new BufferedWriter(fwBidder);
+            bwItem = new BufferedWriter(fwItem);
+            bwBids = new BufferedWriter(fwBids);
+            bwCategory = new BufferedWriter(fwCategory);
+        }
+        catch(IOException e) {  //exception for writing
+            System.err.println("Error in writing");
+            System.exit(-1);
+        }
+        catch(Exception e) {
+            
+            System.err.println("Error in main I/O");
+            System.exit(-1);
+        }
+
         
         /* Process all files listed on command line. */
         for (int i = 0; i < args.length; i++) {
             System.out.println(args[i]);
             File currentFile = new File(args[i]);
-            processFile(currentFile);
+            processFile(currentFile, bwSeller, bwBidder, bwItem, bwBids, bwCategory);
         }
+
+        try {
+            if(bwSeller!=null) bwSeller.close();
+            if(bwBidder!=null) bwBidder.close();
+            if(bwItem!=null) bwItem.close();
+            if(bwBids!=null) bwBids.close();
+            if(bwCategory!=null) bwCategory.close();
+        }
+        catch(IOException e) {  //exception for writing
+            System.err.println("Error in closing");
+            System.exit(-1);
+        }
+        catch(Exception e) {
+            
+            System.err.println("Error in main I/O closing");
+            System.exit(-1);
+        }
+        
     }
 }
