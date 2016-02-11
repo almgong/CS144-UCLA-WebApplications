@@ -102,12 +102,15 @@ public class AuctionSearch implements IAuctionSearch {
 	public SearchResult[] spatialSearch(String query, SearchRegion region,
 			int numResultsToSkip, int numResultsToReturn) {
 
+		ArrayList<SearchResult> intersection = new ArrayList<>();
+
 		// Set up database connection. 
 		try {
 			Connection c = DbManager.getConnection(true);
 
 			// Get keyword matches in either description, title, or category.
-		
+			SearchResult[] sr = basicSearch(query, 0, 20000);
+
 			// Get spatially relevant items.
 			// Create polygon region for search. 
 			String polygon = "Polygon((" + region.getLx() + " " + region.getLy() +"," +
@@ -127,17 +130,38 @@ public class AuctionSearch implements IAuctionSearch {
 
 			ResultSet rs = prepareSpatialSearch.executeQuery();
 			int count = 0;
+
 			while(rs.next()) {
+				String itemId = rs.getString("item_id");
+				for(SearchResult s : sr) {
+					if (itemId.equals(s.getItemId())) {
+						// add to total arraylist. 
+						intersection.add(s);
+					}
+				}
 				count++;
 			}
-			System.out.println("Count: " + count);
+			//System.out.println("Spatial Count: " + count);
 
 		} catch (SQLException se) {
 			System.err.println("SQLException: " + se.getMessage());
 		}
 
+		int numResults = intersection.size();
+		int retSize = numResults - numResultsToSkip;
+		if(retSize < 0) {
+			retSize = 0;
+		} else if(retSize > numResultsToReturn) {
+			retSize = numResultsToReturn;
+		}
+		SearchResult[] ret = new SearchResult[retSize];
+
+		for (int i = numResultsToSkip; i < numResultsToSkip + retSize; i++) {
+			ret[i-numResultsToSkip] = intersection.get(i);
+		}
+
 		// Return those that match both criteria. Merge the ResultSets into one array of SearchResults.
-		return new SearchResult[0];
+		return ret;
 	}
 
 	public String getXMLDataForItemId(String itemId) {
@@ -281,7 +305,7 @@ public class AuctionSearch implements IAuctionSearch {
 		return message;
 	}
 
-	
+
 	private String escapeCharacters(String s) {
 		return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 	}
