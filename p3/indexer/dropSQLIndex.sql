@@ -1,2 +1,2 @@
-DROP INDEX sp_index ON geom;
+ALTER TABLE geom DROP INDEX g;
 DROP TABLE IF EXISTS geom;
