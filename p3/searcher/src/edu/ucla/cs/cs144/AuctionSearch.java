@@ -64,6 +64,10 @@ public class AuctionSearch implements IAuctionSearch {
 		//the array to return
 		SearchResult[] ret = new SearchResult[0];
 
+		//quick correctness check
+		if(numResultsToSkip < 0 || numResultsToReturn < 0)
+			return ret;
+
 		try {
 			BasicSE se = new BasicSE();
 			TopDocs top = se.search(query, numResultsToSkip+numResultsToReturn);
@@ -83,6 +87,14 @@ public class AuctionSearch implements IAuctionSearch {
 					ret[retIndex] = sr;
 					retIndex++;
 				}
+			}
+
+			//if numRestults < retSize, need to truncate array
+			if(numResultsToReturn < retSize) {
+				SearchResult[] retTrunc = new SearchResult[numResultsToReturn];
+				for(int i = 0; i < retTrunc.length; i++) 
+					retTrunc[i] = ret[i];
+				ret = retTrunc;
 			}
 		}
 		catch(IOException e) {
