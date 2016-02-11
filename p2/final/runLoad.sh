@@ -1,3 +1,4 @@
+#!/bin/bash
 #automate P2 Database transformation and set up
 
 #make sure all tables are refreshed
