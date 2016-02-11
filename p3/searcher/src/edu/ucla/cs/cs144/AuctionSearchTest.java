@@ -23,7 +23,7 @@ public class AuctionSearchTest {
 		//for(SearchResult result : basicResults) {
 	//		System.out.println(result.getItemId() + ": " + result.getName());
 	//	}
-		/*
+		
 		SearchRegion region =
 		    new SearchRegion(33.774, -118.63, 34.201, -117.38); 
 		SearchResult[] spatialResults = as.spatialSearch("camera", region, 0, 20);
@@ -37,8 +37,49 @@ public class AuctionSearchTest {
 		String item = as.getXMLDataForItemId(itemId);
 		System.out.println("XML data for ItemId: " + itemId);
 		System.out.println(item);
-		*/
+		
 
 		// Add your own test here
+		// Test Name and description with quotes inside.
+		itemId = "1045033048";
+		item = as.getXMLDataForItemId(itemId);
+		System.out.println("XML data for ItemId: " + itemId);
+		System.out.println(item);
+	
+		// Test description and category with &amp;.
+		itemId = "1045034546";
+		item = as.getXMLDataForItemId(itemId);
+		System.out.println("XML data for ItemId: " + itemId);
+		System.out.println(item);
+
+		// Test location with no lat/long attributes.
+		itemId = "1045034667";
+		item = as.getXMLDataForItemId(itemId);
+		System.out.println("XML data for ItemId: " + itemId);
+		System.out.println(item);
+
+		// Test invalid itemId.
+		itemId = "0000";
+		item = as.getXMLDataForItemId(itemId);
+		System.out.println("XML data for ItemId: " + itemId);
+		System.out.println(item);
+
+		// Test auction with bids.
+		itemId = "1045041605";
+		item = as.getXMLDataForItemId(itemId);
+		System.out.println("XML data for ItemId: " + itemId);
+		System.out.println(item);
+
+		// Test auction with bidder with neither location nor country.
+		itemId = "1045700537";
+		item = as.getXMLDataForItemId(itemId);
+		System.out.println("XML data for ItemId: " + itemId);
+		System.out.println(item);
+
+		// Test auction with bidder with location but no country.
+		itemId = "1045460719";
+		item = as.getXMLDataForItemId(itemId);
+		System.out.println("XML data for ItemId: " + itemId);
+		System.out.println(item);
 	}
 }
