@@ -43,16 +43,17 @@ public class Indexer {
         return this.indexWriter;
     }
 
-    /** Given the input data, write each to the index **/
+    /** Given the input item, write each to the index **/
     public void writeToIndex(Item item) {
         try {
             IndexWriter idw = this.getIndexWriter();
-            System.out.println("---------------------");
-            System.out.println("Item\nItem_id: " + item.getID() +
-                "\nName: " + item.getName() + "\nCategories: " + item.getCategories() +
-                "\nDescription: " +item.getDescription() + "\n");
-            System.out.println("---------------------");
-
+            Document d = new Document();
+            d.add(new StringField("id", item.getID()+"", Field.Store.YES));
+            d.add(new StringField("name", item.getName(), Field.Store.YES));
+            String total = item.getName() + " " + item.getCategories() + 
+            " " + item.getDescription();
+            d.add(new TextField("searchable", total, Field.Store.NO));
+            idw.addDocument(d);
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -85,6 +86,11 @@ public class Indexer {
             System.exit(-1);
         }
         return rs;
+    }
+
+    /** close index writer, if exists **/
+    public void closeIndexWriter() throws IOException {
+        if(this.indexWriter!=null) indexWriter.close();
     }
 
     public void rebuildIndexes() {
@@ -120,8 +126,8 @@ public class Indexer {
     	 */
 
         //used to incremeent values accordingly to iteratively get all items
-        int limit = 4;
-        int offset = 0;
+        int limit = 4;//deprecated
+        int offset = 0;//dep
         ResultSet rs = null;
         int prevID, id;                    //holds previous id checked
         String name, description, categories, cat;
@@ -159,7 +165,7 @@ public class Indexer {
                     categories = curr.getCategories();
                 }
 
-                prevID = id;    //update previous id visited      //TODO: how to deal with the last item???
+                prevID = id;    //update previous id visited   
 
 
             } while(rs.next());
@@ -169,6 +175,9 @@ public class Indexer {
                 curr.setCategories(categories);
 
             writeToIndex(curr);
+
+            //all "writing" has been queued/concluded, close index to finalize
+            closeIndexWriter();
         }
         catch(Exception e) {
             e.printStackTrace();
