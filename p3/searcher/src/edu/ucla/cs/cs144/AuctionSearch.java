@@ -114,6 +114,13 @@ public class AuctionSearch implements IAuctionSearch {
 	public SearchResult[] spatialSearch(String query, SearchRegion region,
 			int numResultsToSkip, int numResultsToReturn) {
 
+		//the array to return
+		SearchResult[] ret = new SearchResult[0];
+
+		//quick correctness check
+		if(numResultsToSkip < 0 || numResultsToReturn < 0)
+			return ret;
+
 		ArrayList<SearchResult> intersection = new ArrayList<>();
 
 		// Set up database connection. 
@@ -166,7 +173,7 @@ public class AuctionSearch implements IAuctionSearch {
 		} else if(retSize > numResultsToReturn) {
 			retSize = numResultsToReturn;
 		}
-		SearchResult[] ret = new SearchResult[retSize];
+		ret = new SearchResult[retSize];
 
 		for (int i = numResultsToSkip; i < numResultsToSkip + retSize; i++) {
 			ret[i-numResultsToSkip] = intersection.get(i);
@@ -304,7 +311,7 @@ public class AuctionSearch implements IAuctionSearch {
 				categoryXML += "<Category>" + cat + "</Category>\n";
 			}
 
-			createdXML = idXML + nameXML + categoryXML + currentlyXML + firstBidXML + numberOfBidsXML + bidsXML + locationXML + countryXML + startedXML + endsXML + sellerXML + descriptionXML;
+			createdXML = idXML + nameXML + categoryXML + currentlyXML + firstBidXML + numberOfBidsXML + bidsXML + locationXML + countryXML + startedXML + endsXML + sellerXML + descriptionXML + "</Item>\n";
 
 
 		} catch (SQLException se) {
