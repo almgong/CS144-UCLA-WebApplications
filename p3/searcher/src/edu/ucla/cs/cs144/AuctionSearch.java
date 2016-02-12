@@ -226,6 +226,13 @@ public class AuctionSearch implements IAuctionSearch {
 			double currently = rs.getDouble("currently");
 			String currentlyXML = "<Currently>" + String.format("$%.2f", currently) + "</Currently>\n";
 
+			double buyPrice = rs.getDouble("buy_price");
+			String buyPriceXML = "";
+			// Null comes back as 0. Only add a buyPrice element if it is not null.
+			if(buyPrice != 0) {
+				buyPriceXML = "<Buy_Price>" + String.format("$%.2f", buyPrice) + "</Buy_Price>\n";
+			}
+			
 			double firstBid = rs.getDouble("first_bid");
 			String firstBidXML = "<First_Bid>" + String.format("$%.2f", firstBid) + "</First_Bid>\n";
 
@@ -311,7 +318,7 @@ public class AuctionSearch implements IAuctionSearch {
 				categoryXML += "<Category>" + cat + "</Category>\n";
 			}
 
-			createdXML = idXML + nameXML + categoryXML + currentlyXML + firstBidXML + numberOfBidsXML + bidsXML + locationXML + countryXML + startedXML + endsXML + sellerXML + descriptionXML + "</Item>\n";
+			createdXML = idXML + nameXML + categoryXML + currentlyXML + buyPriceXML + firstBidXML + numberOfBidsXML + bidsXML + locationXML + countryXML + startedXML + endsXML + sellerXML + descriptionXML + "</Item>";
 
 
 		} catch (SQLException se) {
