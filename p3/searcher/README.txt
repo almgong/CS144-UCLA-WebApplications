@@ -1,1 +1,1 @@
-Readme searcher p3
+This contains the project3-searcher source code.
