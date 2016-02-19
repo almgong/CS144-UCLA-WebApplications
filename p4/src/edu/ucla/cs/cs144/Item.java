@@ -12,13 +12,13 @@ public class Item {
 	String id;			//itemID attribute
 
 	@XmlElement(name="Name")
-	Stirng name;		//name
+	String name;		//name
 
 	@XmlElement(name="Currently")
 	String currently;	//Currently
 
 	@XmlElement(name="First_Bid")
-	Stirng firstBid;	//First_Bid
+	String firstBid;	//First_Bid
 
 	@XmlElement(name="Number_of_Bids")
 	int numBids;		//Number_of_Bids
@@ -33,7 +33,7 @@ public class Item {
 	String started;		//Started
 
 	@XmlElement(name="Ends")
-	String ends			//Ends
+	String ends;			//Ends
 
 	//one special object for categories (array list)
 	//one special object for Seller
