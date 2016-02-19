@@ -21,6 +21,11 @@
 	</head>
 	<body>
 		<%= request.getAttribute("xml") %>
+		<br>
+		<br>
+		<%= request.getAttribute("desc") %>
+		<br><br>
+		<%= request.getAttribute("name") %>
 	</body>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>

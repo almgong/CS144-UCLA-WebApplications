@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.xml.bind.JAXB;
+import java.io.StringReader;
+
 public class ItemServlet extends HttpServlet implements Servlet {
        
     public ItemServlet() {}
@@ -21,7 +24,12 @@ public class ItemServlet extends HttpServlet implements Servlet {
         	throw new ServletException();
 
         String xmlForId = AuctionSearchClient.getXMLDataForItemId(itemId);
+        StringReader sr = new StringReader(xmlForId);
+        Item i = JAXB.unmarshal(sr, Item.class);
+
         request.setAttribute("xml", xmlForId);
+        request.setAttribute("desc", i.getDescription());
+        request.setAttribute("name", i.getName());
         request.getRequestDispatcher("jsp/itemsearchresult.jsp").forward(request, response);
     }
 }
