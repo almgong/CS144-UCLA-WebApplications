@@ -5,6 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
 		<link href='https://fonts.googleapis.com/css?family=Varela' rel='stylesheet' type='text/css'>
 		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+		<link href='css/suggestion.css' rel='stylesheet' type='text/css'>
 		<style type="text/css">
 			body {
 				font-family: 'Varela', sans-serif;
@@ -37,7 +38,7 @@
 		<div class="container-fluid">
 			<form class="navbar-form navbar-left" role="search" action="search">
 				<div class="form-group">
-					<input type="text" class="form-control" name="q" placeholder="I am looking for..." required="required" />
+					<input type="text" class="form-control" id="search" name="q" placeholder="I am looking for..." required="required" />
 					<input type="hidden" name="numResultsToSkip" value="0" />
 					<input type="hidden" name="numResultsToReturn" value="20" />
 				</div>
@@ -123,6 +124,15 @@
 			<br/><br/>
 		</div>
 	</body>
+
+	<script type="text/javascript" src="js/autosuggest.js"></script>
+    <script type="text/javascript" src="js/suggestions.js"></script>
+	<script type="text/javascript">
+        window.onload = function () {
+            var oTextbox = new AutoSuggestControl(document.getElementById("search"), new SuggestionProvider()); 
+        }
+    </script>
+
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </html>
