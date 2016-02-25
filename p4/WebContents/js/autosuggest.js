@@ -34,7 +34,7 @@ AutoSuggestControl.prototype.autosuggest = function (aSuggestions,
 bTypeAhead) {
     if (aSuggestions.length > 0) {
         if (bTypeAhead) {
-            this.typeAhead(aSuggestions[0]);
+            //this.typeAhead(aSuggestions[0]);
         }
         this.showSuggestions(aSuggestions);
     } else {
