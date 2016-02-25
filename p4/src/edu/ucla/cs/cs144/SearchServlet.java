@@ -29,6 +29,7 @@ public class SearchServlet extends HttpServlet implements Servlet {
         }
         request.setAttribute("ids", ids);
         request.setAttribute("names", names);
+        request.setAttribute("numResults", results.length);
         request.getRequestDispatcher("/jsp/keywordsearchresult.jsp").forward(request, response);
     }
 }
