@@ -38,7 +38,7 @@
 		<div class="container-fluid">
 			<form class="navbar-form navbar-left" role="search" action="search">
 				<div class="form-group">
-					<input type="text" class="form-control" id="search" name="q" placeholder="I am looking for..." required="required" />
+					<input type="text" class="form-control" id="search" name="q" placeholder="I am looking for..." />
 					<input type="hidden" name="numResultsToSkip" value="0" />
 					<input type="hidden" name="numResultsToReturn" value="20" />
 				</div>
