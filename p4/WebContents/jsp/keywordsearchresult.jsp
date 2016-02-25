@@ -24,6 +24,12 @@
 			.list-group-item:hover, .list-group-item.active {
 				background-color: #f3f3f3;
 			}
+			.navigation-links i {
+				cursor: pointer;
+			}
+			.navigation-links i:hover, .navigation-links i:active {
+				color: #D3D3D3;
+			}
 		</style>
 	</head>
 	<body>
@@ -47,21 +53,49 @@
 
 			   int numRet = Integer.parseInt(request.getParameter("numResultsToReturn"));
 
+			   int numResults = (Integer)request.getAttribute("numResults"); //upper bound on search result count
+
 			   int prev = 0;
 			   int next = 0;
+			   int numResultsReturned = numResults;
+			   boolean showPrev;
 			%>
-			<% if(numSkip < numRet) next=0; 
-				else numSkip = numSkip+numRet;
+			<% if(numSkip < numRet) {  //prevent any potential errors
+					next = numRet;
+					prev = 0;
+					showPrev = false; //this means numSkip = 0, can't go back
+				} 
+				else {
+					prev = numSkip-numRet;
+					next = numSkip+numRet;
+					showPrev=true;
+				} 
+
+				numResults+=numSkip;
 			%>
-			<%%>
-			<div class="row text-center">
+			<p>
+				<i>
+					<% if(numResults > 0) { %>
+						Showing results <%=numSkip + 1%> to <%=numResults%>
+					<% } %>
+					<% if(numResults <= 0) { %>
+						No results
+					<% } %>
+				</i>
+			</p>
+			<div class="row text-center navigation-links">
 				<div class="col-sm-6">
-					<i class="fa fa-chevron-circle-left fa-2x" onclick="window.location.href='/eBay/search?q=<%= request.getParameter("q") %>&numResultsToSkip=<%=numSkip%>&numResultsToReturn=<%=numRet%>'"></i>
+					<% if(showPrev) { %>
+					<i class="fa fa-chevron-circle-left fa-2x" onclick="window.location.href='/eBay/search?q=<%= request.getParameter("q") %>&numResultsToSkip=<%=prev%>&numResultsToReturn=<%=numRet%>'"></i>
+					<% } %>
 				</div>
 				<div class="col-sm-6">
-					<i class="fa fa-chevron-circle-right fa-2x"></i>
+					<% if(numResultsReturned==20) { %>
+					<i class="fa fa-chevron-circle-right fa-2x" onclick="window.location.href='/eBay/search?q=<%= request.getParameter("q") %>&numResultsToSkip=<%=next%>&numResultsToReturn=<%=numRet%>'"></i>
+					<% } %>
 				</div>
 			</div>
+			<hr />
 			<ul id="" class="list-group">
 				<% String[] idsCasted = (String[])request.getAttribute("ids"); %>
 				<% String[] namesCasted = (String[])request.getAttribute("names"); %>
@@ -72,6 +106,21 @@
 					</li>
 				<% } %>
 			</ul>
+
+			<hr/>
+			<div class="row text-center navigation-links">
+				<div class="col-sm-6">
+					<% if(showPrev) { %>
+					<i class="fa fa-chevron-circle-left fa-2x" onclick="window.location.href='/eBay/search?q=<%= request.getParameter("q") %>&numResultsToSkip=<%=prev%>&numResultsToReturn=<%=numRet%>'"></i>
+					<% } %>
+				</div>
+				<div class="col-sm-6">
+					<% if(numResultsReturned==20) { %>
+					<i class="fa fa-chevron-circle-right fa-2x" onclick="window.location.href='/eBay/search?q=<%= request.getParameter("q") %>&numResultsToSkip=<%=next%>&numResultsToReturn=<%=numRet%>'"></i>
+					<% } %>
+				</div>
+			</div>
+			<br/><br/>
 		</div>
 	</body>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
