@@ -69,16 +69,11 @@ public class ItemServlet extends HttpServlet implements Servlet {
     {
         // your codes here
         String itemId = request.getParameter("id");	//get id
-
-        //existence check
-        if(itemId.length() == 0)
-        	throw new ServletException();
-
         String xmlForId = AuctionSearchClient.getXMLDataForItemId(itemId);
 
         //if invalid id entered
         if(xmlForId.length() == 0) {
-            request.setAttribute("valid", false);
+            request.setAttribute("valid", "false");
             request.getRequestDispatcher("jsp/itemsearchresult.jsp").forward(request, response);
             return;
         }
@@ -86,7 +81,7 @@ public class ItemServlet extends HttpServlet implements Servlet {
         StringReader sr = new StringReader(xmlForId);
         Item i = JAXB.unmarshal(sr, Item.class);
 
-        request.setAttribute("valid", true); //a valid + existing id entered
+        request.setAttribute("valid", "true"); //a valid + existing id entered
 
         //pass all info needed for view to render
         request.setAttribute("id", i.getID());
