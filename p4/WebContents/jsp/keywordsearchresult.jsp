@@ -43,11 +43,20 @@
 		<div class="container-fluid">
 			<h2>Search results for "<%= request.getParameter("q") %>":</h2>
 
-			<% if() %>
+			<% int numSkip = Integer.parseInt(request.getParameter("numResultsToSkip")); 
+
+			   int numRet = Integer.parseInt(request.getParameter("numResultsToReturn"));
+
+			   int prev = 0;
+			   int next = 0;
+			%>
+			<% if(numSkip < numRet) next=0; 
+				else numSkip = numSkip+numRet;
+			%>
 			<%%>
 			<div class="row text-center">
 				<div class="col-sm-6">
-					<i class="fa fa-chevron-circle-left fa-2x" onclick="window.location.href='/eBay/search?q=<%= request.getParameter("q") %>&numResultsToSkip= %>'"></i>
+					<i class="fa fa-chevron-circle-left fa-2x" onclick="window.location.href='/eBay/search?q=<%= request.getParameter("q") %>&numResultsToSkip=<%=numSkip%>&numResultsToReturn=<%=numRet%>'"></i>
 				</div>
 				<div class="col-sm-6">
 					<i class="fa fa-chevron-circle-right fa-2x"></i>
