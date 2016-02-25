@@ -11,6 +11,12 @@ import javax.xml.bind.JAXB;
 import java.io.StringReader;
 import java.util.ArrayList;
 
+//timestamp
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.util.Date;
+
 public class ItemServlet extends HttpServlet implements Servlet {
        
     public ItemServlet() {}
@@ -36,6 +42,29 @@ public class ItemServlet extends HttpServlet implements Servlet {
         return bids;
     }
 
+    public static String getNiceTimestamp(String origTime) {
+        SimpleDateFormat targetFormat = new SimpleDateFormat("MMMMM dd, yyyy hh:mm:ss aaa");
+        String ret = "";
+         try {
+            String inputFormat = "MMM-dd-yy HH:mm:ss";
+            DateFormat df = new SimpleDateFormat(inputFormat);
+            Date d = df.parse(origTime);
+            ret = targetFormat.format(d);
+        }
+        catch(ParseException ex) {
+            System.err.println("Error in getting SQL timestamp.");
+            System.exit(-1);
+        }
+
+        return ret;
+    }
+
+    public static void formatBidTimes(Bid[] bids) {
+        for(int i =0; i < bids.length; i++) {
+            bids[i].setTime(getNiceTimestamp(bids[i].getTime()));
+        }
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         // your codes here
@@ -46,8 +75,18 @@ public class ItemServlet extends HttpServlet implements Servlet {
         	throw new ServletException();
 
         String xmlForId = AuctionSearchClient.getXMLDataForItemId(itemId);
+
+        //if invalid id entered
+        if(xmlForId.length() == 0) {
+            request.setAttribute("valid", false);
+            request.getRequestDispatcher("jsp/itemsearchresult.jsp").forward(request, response);
+            return;
+        }
+
         StringReader sr = new StringReader(xmlForId);
         Item i = JAXB.unmarshal(sr, Item.class);
+
+        request.setAttribute("valid", true); //a valid + existing id entered
 
         //pass all info needed for view to render
         request.setAttribute("id", i.getID());
@@ -60,8 +99,8 @@ public class ItemServlet extends HttpServlet implements Servlet {
         request.setAttribute("item-location-lat", i.getLocation().getLatitude());
         request.setAttribute("item-location-lon", i.getLocation().getLongitude());
         request.setAttribute("country", i.getCountry());
-        request.setAttribute("started", i.getStarted());
-        request.setAttribute("ends", i.getEnds());
+        request.setAttribute("started", getNiceTimestamp(i.getStarted()));
+        request.setAttribute("ends", getNiceTimestamp(i.getEnds()));
 
         //seller
         request.setAttribute("sellerRating", i.getSellerRating());
@@ -69,6 +108,7 @@ public class ItemServlet extends HttpServlet implements Servlet {
 
         //bids - assume front end knows what a Bid obj is
         Bid[] bids = convertALtoABid(i.getBids());
+        formatBidTimes(bids);   //formats the timestamps in bid
         request.setAttribute("bids", bids);
 
         request.setAttribute("desc", i.getDescription());
