@@ -65,6 +65,16 @@ public class ItemServlet extends HttpServlet implements Servlet {
         }
     }
 
+    //only works for Bids[], in place swap
+    public static void reverseArray(Bid[] b) {
+        Bid temp;
+        for(int i = 0; i < b.length/2; i++) {
+            temp = b[i];    //store current
+            b[i] = b[b.length-1-i];
+            b[b.length-1-i] = temp;
+        }
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         // your codes here
@@ -104,6 +114,7 @@ public class ItemServlet extends HttpServlet implements Servlet {
         //bids - assume front end knows what a Bid obj is
         Bid[] bids = convertALtoABid(i.getBids());
         formatBidTimes(bids);   //formats the timestamps in bid
+        reverseArray(bids);     //reverse array, per spec
         request.setAttribute("bids", bids);
 
         request.setAttribute("desc", i.getDescription());
