@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Keyword Search | Cho's Auction House</title>
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+		<link href='https://fonts.googleapis.com/css?family=Varela' rel='stylesheet' type='text/css'>
+		<link href='css/suggestion.css' rel='stylesheet' type='text/css'>
+
+		<style>
+			body {
+				font-family: 'Varela', sans-serif;
+				background-color:#f9f9f9;
+			}
+			.btn {
+				background-color: #228B22;
+				color:white;
+			}
+			.btn:hover, .btn:active {
+				background-color: #145314;
+				color:white;
+			}
+
+			/*styles specific to this page*/
+			.header {
+				margin-bottom: 15px;
+			}
+			#main-search-bubble {
+				background: url(img/cho.jpg) no-repeat;
+				background-size: contain;
+			    height: 400px;
+			    width: 542px;
+			    margin: 0 auto;
+			    border-radius: 50%;
+			}
+		</style>
+
+	</head>
+	<body>
+		<!-- top navigation -->
+		<div class="container-fluid" id="content">
+			<div class="row text-center header">
+				<h1>
+					<i>What are you looking for?</i><br/>
+					Cho's Auction House
+				</h1>
+			</div>
+			<div class="row">
+				<div id="main-search-bubble"></div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 text-center" id="search-form">
+					<form class="navbar-form" role="search" action="search">
+						<div class="form-group">
+							<input type="text" class="form-control" id="search" name="q" placeholder="I am looking for..." />
+							<input type="hidden" name="numResultsToSkip" value="0" />
+							<input type="hidden" name="numResultsToReturn" value="20" />
+						</div>
+						<button type="submit" class="btn btn-default">Search</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/autosuggest.js"></script>
+    <script type="text/javascript" src="js/suggestions.js"></script>
+	<script type="text/javascript">
+        window.onload = function () {
+            var oTextbox = new AutoSuggestControl(document.getElementById("search"), new SuggestionProvider()); 
+        }
+    </script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</html>
