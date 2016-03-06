@@ -40,6 +40,9 @@ public class Item {
 	@XmlElement(name="Ends")
 	private String ends;			//Ends
 
+	@XmlElement(name="Buy_Price")	//buy price
+	private String buyPrice;
+
 	//one special object for categories (array list)
 	//one special object for Seller
 	@XmlElement(name="Seller")
@@ -90,6 +93,9 @@ public class Item {
 		this.description = description;
 	}
 
+	private void setBuyPrice(String p) {
+		this.buyPrice = p;
+	}
 
 
 	//getters
@@ -141,6 +147,10 @@ public class Item {
 
 	public String getDescription() {
 		return this.description;
+	}
+
+	public String getBuyPrice(){
+		return this.buyPrice;
 	}
 
 }

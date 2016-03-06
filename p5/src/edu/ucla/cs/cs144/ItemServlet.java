@@ -106,6 +106,7 @@ public class ItemServlet extends HttpServlet implements Servlet {
         request.setAttribute("country", i.getCountry());
         request.setAttribute("started", getNiceTimestamp(i.getStarted()));
         request.setAttribute("ends", getNiceTimestamp(i.getEnds()));
+        request.setAttribute("buyPrice", i.getBuyPrice());
 
         //seller
         request.setAttribute("sellerRating", i.getSellerRating());

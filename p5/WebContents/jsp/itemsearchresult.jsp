@@ -140,6 +140,12 @@
 					<p>
 						<span class="header-text">Ends:</span> <%= request.getAttribute("ends") %>
 					</p>
+					<% if(request.getAttribute("buyPrice")!= null) { %>
+					<p>
+						<span class="header-text">Buy Price:</span> <%= request.getAttribute("buyPrice") %>
+					</p>
+					<button class="btn">Pay Now!</button>
+					<% } %>
 				</div>
 			</div>
 			<br/>
