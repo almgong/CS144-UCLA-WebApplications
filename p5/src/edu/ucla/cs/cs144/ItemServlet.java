@@ -17,6 +17,9 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
+//session
+import javax.servlet.http.HttpSession;
+
 public class ItemServlet extends HttpServlet implements Servlet {
        
     public ItemServlet() {}
@@ -119,6 +122,14 @@ public class ItemServlet extends HttpServlet implements Servlet {
         request.setAttribute("bids", bids);
 
         request.setAttribute("desc", i.getDescription());
+
+
+        //before forwarding, store relevant information in the session
+        HttpSession session = request.getSession(true);
+        session.setAttribute("buyPrice", i.getBuyPrice());    //prevent manipulation
+        session.setAttribute("id", i.getID());
+        session.setAttribute("name", i.getName());
+
         request.getRequestDispatcher("jsp/itemsearchresult.jsp").forward(request, response);
     }
 }
