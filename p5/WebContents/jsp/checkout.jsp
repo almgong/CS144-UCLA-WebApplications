@@ -44,7 +44,7 @@ padding-bottom: 15px;
 						Item Name: <%= request.getAttribute("name") %> <br/>
 						Buy Price: <%= request.getAttribute("buyPrice") %>
 					</p>
-					<label for="ccnum">Credit Card</label>
+					<label for="ccnum">Credit Card: </label>
 					<input id="ccnum" type="text" name="creditCardNum" placeholder="e.g 1234..." />
 					<input type="submit" value="Buy!"/>
 				</form>
