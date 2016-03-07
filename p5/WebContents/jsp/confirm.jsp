@@ -12,6 +12,8 @@
 			body {
 				font-family: 'Varela', sans-serif;
 				background-color:#f9f9f9;
+				background: url('img/cho.jpg') no-repeat;
+				background-size: cover; 
 			}
 			.btn {
 				background-color: #228B22;
@@ -28,7 +30,8 @@
 				font-style: italic;
 			}
 			.checkout-form{
-				margin-top:25%;
+				background-color:#f9f9f9;
+				margin-top:2%;
 				border:3px solid gray;
 				-webkit-box-shadow: 4px 5px 5px 0px rgba(140,136,140,1);
 -moz-box-shadow: 4px 5px 5px 0px rgba(140,136,140,1);
