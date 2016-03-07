@@ -21,12 +21,18 @@ import java.util.Date;
 import javax.servlet.http.HttpSession;
 
 //handles logic for user checkout of an item
-public class CheckoutServlet extends HttpServlet implements Servlet {
+public class ConfirmationServlet extends HttpServlet implements Servlet {
        
-    public CheckoutServlet() {}
+    public ConfirmationServlet() {}
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        request.setAttribute("time", sdf.format(now));
+        request.setAttribute("ccnum", request.getParameter("creditCardNum"));
+
         //expects a session object to have been made with required information
         HttpSession session = request.getSession();
         if(session==null) {
@@ -39,6 +45,9 @@ public class CheckoutServlet extends HttpServlet implements Servlet {
         request.setAttribute("id", session.getAttribute("id")); //get id from session
         request.setAttribute("buyPrice", session.getAttribute("buyPrice"));
         request.setAttribute("name", session.getAttribute("name"));
-        request.getRequestDispatcher("jsp/checkout.jsp").forward(request, response);
+
+        //TODO some logic for timestamp
+
+        request.getRequestDispatcher("jsp/confirm.jsp").forward(request, response);
     }
 }

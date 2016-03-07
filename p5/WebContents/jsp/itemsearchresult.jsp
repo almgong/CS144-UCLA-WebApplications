@@ -144,7 +144,7 @@
 					<p>
 						<span class="header-text">Buy Price:</span> <%= request.getAttribute("buyPrice") %>
 					</p>
-					<button class="btn">Pay Now!</button>
+					<button class="btn" onclick="window.location.href='/eBay/checkout'">Pay Now!</button>
 					<% } %>
 				</div>
 			</div>
