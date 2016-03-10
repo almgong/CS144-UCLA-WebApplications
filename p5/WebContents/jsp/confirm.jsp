@@ -32,6 +32,7 @@
 			.checkout-form{
 				background-color:#f9f9f9;
 				margin-top:2%;
+				padding-bottom: 10px;
 				border:3px solid gray;
 				-webkit-box-shadow: 4px 5px 5px 0px rgba(140,136,140,1);
 -moz-box-shadow: 4px 5px 5px 0px rgba(140,136,140,1);
@@ -56,6 +57,7 @@ box-shadow: 4px 5px 5px 0px rgba(140,136,140,1);
 					failed expectations, or carrying out refunds. Buy at your
 					own risk!
 				</p>
+				<button class="btn" onclick="window.location.href='http://localhost:1448/eBay/index.html'">Return to Cho's Auction House Home</button>
 			</div>
 
 		</div>

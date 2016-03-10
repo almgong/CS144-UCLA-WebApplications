@@ -37,7 +37,7 @@ padding-bottom: 15px;
 	<body>
 		<div class="container text-center">
 			<div class="checkout-form">
-				<form class="form" action="confirm" method="POST">
+				<form class="form" action="https://localhost:8443/eBay/confirm" method="POST">
 					<h3>Buy This Item Now!</h3>
 					<p>
 						ItemID: <%= request.getAttribute("id") %> <br/>
