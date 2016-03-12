@@ -46,7 +46,7 @@ padding-bottom: 15px;
 					</p>
 					<label for="ccnum">Credit Card: </label>
 					<input id="ccnum" type="text" name="creditCardNum" placeholder="e.g 1234..." />
-					<input type="submit" value="Buy!"/>
+					<input type="submit" value="Submit"/>
 				</form>
 			</div>
 
